@@ -251,7 +251,7 @@ function updateTextByLanguage() {
 
 // Quản lý sách và phân trang
 let allBooks = getBookStore();
-const itemsPerPage = 5;
+const itemsPerPage = 20;
 let totalPages = Math.ceil(allBooks.length / itemsPerPage);
 let currentPage = 1;
 
@@ -400,35 +400,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
-// Xác nhận việc xoá sách
-let idBookToDelete;
-const DeleteBook = (id) => {
-    const updatedBookList = getBookStore().filter(item => item.id !== idBookToDelete);
-    saveBookStore(updatedBookList);
-    allBooks = updatedBookList;
-    currentPage = 1;
-    displayBooks(updatedBookList);
-};
-
-// Mở modal xác nhận xoá sách
-const OpenDeleteModal = (id) => {
-    deleteModal.classList.add('active-modal');
-    idBookToDelete = id;
-    const value = getBookStore().filter(item => item.id == id);
-    const confirmationMessage = translations[currentLanguage]["deleteBookConfirmation"].replace("{name}", value[0].name);
-    bookNameSpan.innerHTML = confirmationMessage;
-};
-
-// Đóng modal xác nhận xoá sách
-const CloseDeleteModal = () => {
-    deleteModal.classList.remove('active-modal');
-};
-
-// Xác nhận việc xoá sách
-const ConfirmDelete = () => {
-    CloseDeleteModal();
-    DeleteBook(idBookToDelete);
-};
 
 // Tìm kiếm sách
 const SearchBook = (event) => {
@@ -471,106 +442,6 @@ function ussanitizeInput(text) {
         return map[m];
     });
 }
-const SubmitFormBook = (e) => {
-    e.preventDefault();
-    const safeName = sanitizeInput(inputName.value);
-    const safeAuthor = sanitizeInput(inputAuthor.value);
-    const selectedTopic = selectTopic.options[selectTopic.selectedIndex].value;
-    if (selectTopic.selectedIndex === 0) {
-        alert(translations[currentLanguage]["pleaseselectTopic"]);
-        return;
-    }
-    if (inputact.value === "new") {
-        const formValue = {
-            id: inputId.value,
-            name: safeName,
-            author: safeAuthor,
-            topic: selectedTopic,
-        };
-        const newListBook = [...getBookStore(), formValue];
-        saveBookStore(newListBook);
-    } else {
-        const newListBook = getBookStore().map(item => {
-            if (item.id === idItem) {
-                item.name = inputName.value;
-                item.author = inputAuthor.value;
-                item.topic = selectTopic.options[selectTopic.selectedIndex].value;
-            }
-            return item;
-        });
-        saveBookStore(newListBook);
-    }
-    allBooks = getBookStore();
-    currentPage = 1;
-    displayBooks(allBooks);
-    inputId.value = '';
-    inputName.value = '';
-    inputAuthor.value = '';
-    ModalContainer.classList.remove('active-modal');
-};
-
-// Hiển thị modal thêm sách
-const showModalAdd = (e) => {
-    e.preventDefault();
-    inputact.value = "new";
-    selectTopic.selectedIndex = 0;
-    inputName.placeholder = translations[currentLanguage]["namePlaceholder"];
-    inputAuthor.placeholder = translations[currentLanguage]["authorPlaceholder"];
-    inputId.value = getBookStore().reduce((max, book) => (book.id > max ? book.id : max), 0) + 1;
-    ModalContainer.classList.add('active-modal');
-};
-
-// Hiển thị modal sửa đổi
-const openEditModal = (id) => {
-    const value = getBookStore().filter(item => item.id == id);
-    const name = ussanitizeInput(value[0].name);
-    const author = ussanitizeInput(value[0].author);
-    const topic = value[0].topic;
-    ModalContainer.classList.add('active-modal');
-    submitButton.textContent = translations[currentLanguage]["saveBook"];
-    inputact.value = "edit";
-    if (id && name && author && topic) {
-        inputId.value = id;
-        inputName.placeholder = translations[currentLanguage]["namePlaceholder"];
-        inputAuthor.placeholder = translations[currentLanguage]["authorPlaceholder"];
-        inputName.value = name;
-        inputAuthor.value = author;
-        for (let i = 0; i < selectTopic.options.length; i++) {
-            if (selectTopic.options[i].value == topic) {
-                selectTopic.selectedIndex = i;
-                break;
-            }
-        }
-        idItem = id;
-    }
-};
-// Đóng modal thêm sách
-const hideAddModal = (e) => {
-    ModalContainer.classList.remove('active-modal');
-};
-
-// Đóng modal xác nhận xoá sách
-const hideDeleteModal = (e) => {
-    deleteModalContainer.classList.remove('active-modal');
-};
-
-// Sự kiện xác nhận việc xoá sách
-deleteBookButton.addEventListener('click', ConfirmDelete);
-
-// Sự kiện hủy việc xoá sách
-cancelBookButton.addEventListener('click', CloseDeleteModal);
-
-// Sự kiện hiển thị modal thêm sách
-addButton.addEventListener('click', showModalAdd);
-
-// Sự kiện đóng modal thêm sách
-closeAddModalButton.addEventListener('click', hideAddModal);
-
-// Sự kiện đóng modal xác nhận xoá sách
-closeDeleteModalButton.addEventListener('click', hideDeleteModal);
-
-// Sự kiện gửi form thêm sách
-formAddBook.addEventListener('submit', SubmitFormBook);
 
 // Sự kiện tìm kiếm sách
 searchInput.addEventListener('keyup', SearchBook);
