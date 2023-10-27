@@ -371,25 +371,6 @@ function createTableRow(id, name, author, topic) {
         <td>${id}</td>
         <td>${name}</td>
         <td>${author}</td>
-        <td>${topic}</td>
-        <td>
-            <button
-                type="button"
-                data-i18n="editButton"
-                class="edit-book-button"
-                onclick="openEditModal(${id})"
-            >
-                Edit
-            </button>
-            <button
-                type="button"
-                data-i18n="deleteButton"
-                class="delete-book-button"
-                onclick="OpenDeleteModal(${id})"
-            >
-                Delete
-            </button>
-        </td>
     `;
     return newRow;
 }
