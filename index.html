@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Đọc trang hiện tại từ URL nếu có
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get("page");
-    totalPages = Math.ceil(allDataBase.length / itemsPerPage);
+    totalPages = Math.ceil(getDataBaseStore().length / itemsPerPage);
     if (pageParam && pageParam <= totalPages) {
         currentPage = parseInt(pageParam);
         displayDataBase(allDataBase, currentPage);
@@ -234,7 +234,7 @@ const SearchDataBase = (event) => {
     if (searchValue) {
         displayDataBase(filter);
     } else {
-        displayDatabe(allDataBase);
+        displayDataBase(getDataBaseStore());
     }
 };
 function sanitizeInput(text) {
