@@ -65,8 +65,8 @@ const getDataBaseStore = async () => {
         if (!Array.isArray(DataBaseLists) || DataBaseLists.length === 0) {
              const resBook = await fetch(`/database.json`);
                let database = await resBook.json();
-            saveDataBaseStore(database);
-            DataBaseLists = database;
+            saveDataBaseStore(JSON.parse(database));
+            DataBaseLists = JSON.parse(database);
         }
         return DataBaseLists;
     } catch (error) {
