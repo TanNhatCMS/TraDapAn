@@ -113,12 +113,6 @@ th, td {
     font-weight: 400;
 }
 
-.table td:last-child {
-    color: var(--secondary-color);
-    text-decoration: underline;
-    text-decoration-color: #eebbc3;
-    cursor: pointer;
-}
 .header {
     background-color: #fff;
     display: flex;
@@ -138,38 +132,7 @@ header span {
     color: var(--hightlight)
 }
 
-.pagination-container {
-    margin-top: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1
-}
 
-
-.pagination-number,
-.pagination-button {
-    color: #fff;
-    font-size: 1.1rem;
-    background-color: #28a745;
-    border: none;
-    margin: .25rem;
-    cursor: pointer;
-    height: 2.5rem;
-    width: 2.5rem;
-    border-radius: .2rem
-}
-
-.pagination-number:hover,
-.pagination-button:not(.disabled):hover {
-    color: #000;
-    background: #fff
-}
-
-.pagination-number.active {
-    background: var(--hightlight);
-    background-color: #dc3545;
-}
 
 footer {
     display: flex;
@@ -179,11 +142,6 @@ footer {
     height: 10%
 }
 
-footer img {
-    max-width: 1.25em;
-    margin: 0 .25em;
-    fill: var(--hightlight)
-}
 
 .copyright {
     display: flex;
@@ -201,7 +159,7 @@ footer img {
     <!-- Header start -->
     <header class="header">
         <input id="search-input" name="search-database" class="search-input" type="search"
-                    placeholder="Tìm kiếm tiếng việt có dấu hoặc không dấu" />
+                    placeholder="Có dấu hoặc không dấu" />
     </header>
     <!-- Header end -->
     <main class="container">
@@ -211,9 +169,8 @@ footer img {
             <table id="table-book" class="table-book table-bordered table">
                 <thead>
                     <tr>
-                        <th style="width:5%"><label data-i18n="idLabel">#</label></th>
                         <th style="width:50%"><label for="question" >Câu hỏi</label></th>
-                        <th style="width:45%"><label for="answer" >Đáp Án</label></th>
+                        <th style="width:50%"><label for="answer" >Đáp Án</label></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -259,16 +216,15 @@ function displayDataBase(DataBaseList) {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
     DataBaseList.forEach((DataBase, index) => {
-        const newRow = createTableRow( index + 1, DataBase.question, DataBase.answer);
+        const newRow = createTableRow(DataBase.question, DataBase.answer);
         tbody.appendChild(newRow);
     });
 }
 
-function createTableRow(id, question, answer) {
+function createTableRow(question, answer) {
     const newRow = document.createElement('tr');
     newRow.classList.add('database-item');
     newRow.innerHTML = `
-        <td>${id}</td>
         <td>${question}</td>
         <td>${answer}</td>
     `;
