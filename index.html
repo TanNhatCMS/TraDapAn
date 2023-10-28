@@ -64,9 +64,9 @@ const getDataBaseStore = async () => {
         let DataBaseLists = JSON.parse(localStorage.getItem('database'));
         if (!Array.isArray(DataBaseLists) || DataBaseLists.length === 0) {
              const resBook = await fetch(`/database.json`);
-                database = await resBook.json();
-            saveDataBaseStore(await resBook.json());
-            DataBaseLists = resBook.json();
+               let database = await resBook.json();
+            saveDataBaseStore(database);
+            DataBaseLists = database;
         }
         return DataBaseLists;
     } catch (error) {
