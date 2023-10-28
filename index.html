@@ -258,122 +258,14 @@ const getDataBaseStore = async () => {
     }
     }
 };
-
-
-// Quản lý sách và phân trang
-
 let allDataBase = getDataBaseStore();
-const itemsPerPage = 20;
-let totalPages = Math.ceil(allDataBase.length / itemsPerPage);
-let currentPage = 1;
-
-function displayPageNumbers() {
-    const pageNumbersContainer = document.querySelector("#pagination-numbers");
-    pageNumbersContainer.innerHTML = '';
-
-    for (let i = 1; i <= totalPages; i++) {
-        const pageNumberButton = document.createElement('button');
-        pageNumberButton.textContent = i;
-        pageNumberButton.classList.add("pagination-number");
-        if (totalPages === 1) break;
-        if (i === currentPage) {
-            pageNumberButton.classList.add("active");
-        }
-
-        pageNumberButton.addEventListener("click", function () {
-            currentPage = i;
-            displayDataBase(allDataBase, currentPage);
-            updateURLWithoutReloading();
-        });
-
-        pageNumbersContainer.appendChild(pageNumberButton);
-    }
-}
-
-
-function createPaginationButton(text, id) {
-    const button = document.createElement("button");
-    button.textContent = text;
-    button.id = id;
-    button.className = "pagination-button";
-    return button;
-}
-document.addEventListener("click", function (event) {
-    if (event.target.id === "first-page" && currentPage > 1) {
-        currentPage = 1;
-        displayDataBase(allDataBase, currentPage);
-        updateURLWithoutReloading();
-    } else if (event.target.id === "last-page" && currentPage < totalPages) {
-        currentPage = totalPages;
-        displayDataBase(allDataBase, currentPage);
-        updateURLWithoutReloading();
-    } else if (event.target.id === "prev-page" && currentPage > 1) {
-        currentPage--;
-        displayDataBase(allDataBase, currentPage);
-        updateURLWithoutReloading();
-    } else if (event.target.id === "next-page" && currentPage < totalPages) {
-        currentPage++;
-        displayDataBase(allDataBase, currentPage);
-        updateURLWithoutReloading();
-    }
-});
-function displayDataBase(DataBaseList, page = 1) {
-    totalPages = Math.ceil(DataBaseList.length / itemsPerPage);
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const DataBaseToDisplay = DataBaseList.slice(startIndex, endIndex);
+function displayDataBase(DataBaseList) {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
-    DataBaseToDisplay.forEach((DataBase, index) => {
-        const newRow = createTableRow(startIndex + index + 1, DataBase.question, DataBase.answer);
+    DataBaseList.forEach((DataBase, index) => {
+        const newRow = createTableRow( index + 1, DataBase.question, DataBase.answer);
         tbody.appendChild(newRow);
     });
-    if (totalPages > 1) {
-        const prevPageButton = document.getElementById("prev-page");
-        if (prevPageButton && prevPageButton.parentNode) {
-            prevPageButton.parentNode.removeChild(prevPageButton);
-        }
-        const nextPageButton = document.getElementById("next-page");
-        if (nextPageButton && nextPageButton.parentNode) {
-            nextPageButton.parentNode.removeChild(nextPageButton);
-        }
-        const firstPageButton = document.getElementById("first-page");
-        if (firstPageButton && firstPageButton.parentNode) {
-            firstPageButton.parentNode.removeChild(firstPageButton);
-        }
-        const lastPageButton = document.getElementById("last-page");
-        if (lastPageButton && lastPageButton.parentNode) {
-            lastPageButton.parentNode.removeChild(lastPageButton);
-        }
-        if (currentPage > 1) {
-            const tableContainer = document.querySelector(".pagination-container");
-            const newPrevPageButton = createPaginationButton("<", "prev-page");
-            tableContainer.insertBefore(newPrevPageButton, tableContainer.firstChild);
-        }
-
-        if (currentPage < totalPages) {
-            const tableContainer = document.querySelector(".pagination-container");
-            const newNextPageButton = createPaginationButton(">", "next-page");
-            tableContainer.appendChild(newNextPageButton);
-        }
-
-        // Add "First Page" and "Last Page" buttons if necessary
-
-        const tableContainer = document.querySelector(".pagination-container");
-
-        // Add "First Page" button
-        if (currentPage > 1) {
-            const firstPageButton = createPaginationButton("<<", "first-page");
-            tableContainer.insertBefore(firstPageButton, tableContainer.firstChild);
-        }
-
-        // Add "Last Page" button
-        if (currentPage < totalPages) {
-            const lastPageButton = createPaginationButton(">>", "last-page");
-            tableContainer.appendChild(lastPageButton);
-        }
-        displayPageNumbers();
-    }
 }
 
 function createTableRow(id, question, answer) {
@@ -386,32 +278,6 @@ function createTableRow(id, question, answer) {
     `;
     return newRow;
 }
-function updateURLWithoutReloading() {
-    const newURL = window.location.pathname + "?page=" + currentPage;
-    // Thay đổi URL mà không tải lại trang
-    history.pushState(null, null, newURL);
-}
-window.addEventListener("beforeunload", function (e) {
-    if (currentPage !== undefined) {
-        const newURL = window.location.pathname + "?page=" + currentPage;
-        history.replaceState(null, null, newURL);
-    }
-});
-// Chạy sau khi trang web đã tải hoàn toàn
-document.addEventListener("DOMContentLoaded", function () {
-    // Đọc trang hiện tại từ URL nếu có
-    const urlParams = new URLSearchParams(window.location.search);
-    const pageParam = urlParams.get("page");
-    totalPages = Math.ceil(getDataBaseStore().length / itemsPerPage);
-    if (pageParam && pageParam <= totalPages) {
-        currentPage = parseInt(pageParam);
-        displayDataBase(allDataBase, currentPage);
-    } else {
-        currentPage = 1;
-        updateURLWithoutReloading();
-    }
-
-});
 
 // Tìm kiếm sách
 const SearchDataBase = (event) => {
@@ -422,44 +288,20 @@ const SearchDataBase = (event) => {
             filter.push(database);
         }
     });
-    currentPage = 1;
     if (searchValue) {
         displayDataBase(filter);
     } else {
         displayDataBase(getDataBaseStore());
     }
 };
-function sanitizeInput(text) {
-    var map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, function (m) {
-        return map[m];
-    });
-}
-function ussanitizeInput(text) {
-    var map = {
-        '&amp;': '&',
-        '&lt;': '<',
-        '&gt;': '>',
-        '&quot;': '"',
-        '&#039;': "'"
-    };
-    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, function (m) {
-        return map[m];
-    });
-}
+
 
 // Sự kiện tìm kiếm sách
 searchInput.addEventListener('keyup', SearchDataBase);
 
 async function initializePage() {
   allDataBase = await getDataBaseStore(); // Sử dụng await để đợi hàm hoàn thành và trả về dữ liệu
-  displayDataBase(allDataBase, currentPage);
+  displayDataBase(allDataBase);
 }
 
 // Sự kiện "DOMContentLoaded" để khởi tạo trang web
