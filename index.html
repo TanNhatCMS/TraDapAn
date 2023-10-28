@@ -5,7 +5,197 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Tra Đáp Án</title>
-    <link href="style.css" rel="stylesheet" />
+    <style>
+        :root {
+    --primary-color: #2a3946;
+    --secondary-color: #d2455b;
+    --border-color: #c0ccd7;
+    --font-family: 'Poppins', sans-serif;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+::placeholder {
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    padding: 0;
+    position: relative;
+    margin: 0 auto
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+.logo {
+    color: var(--primary-color);
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 32px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin: 40px 32px 32px 0;
+}
+
+.search-input {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 2px solid var(--border-color);
+    min-width: 280px;
+    height: 42px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #c0ccd7;
+}
+
+.search-input:focus {
+    border-color: #d2455b;
+    transition: all 0.25s linear;
+}
+
+
+
+.search-button:hover {
+    background-color: #d2455ada;
+}
+.table-container {
+    height: 300px; /* Đặt chiều rộng của bảng */
+    overflow: auto; /* Tạo thanh trượt khi nội dung vượt quá kích thước */
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.table {
+    width: 100%; /* Đảm bảo bảng có đủ chiều rộng */
+    border-collapse: collapse;
+    background-color: #fff;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 auto;
+}
+
+
+.table td,
+.table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: var(--primary-color);
+    font-size: 14px;
+}
+
+.table td {
+    font-weight: 400;
+}
+
+.table td:last-child {
+    color: var(--secondary-color);
+    text-decoration: underline;
+    text-decoration-color: #eebbc3;
+    cursor: pointer;
+}
+.header {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 24px;
+    border-bottom: 2px solid #c0ccd7;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-left: .25em
+}
+
+header span {
+    color: var(--hightlight)
+}
+
+.pagination-container {
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1
+}
+
+
+.pagination-number,
+.pagination-button {
+    color: #fff;
+    font-size: 1.1rem;
+    background-color: #28a745;
+    border: none;
+    margin: .25rem;
+    cursor: pointer;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: .2rem
+}
+
+.pagination-number:hover,
+.pagination-button:not(.disabled):hover {
+    color: #000;
+    background: #fff
+}
+
+.pagination-number.active {
+    background: var(--hightlight);
+    background-color: #dc3545;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    padding: 2em 1em 1em;
+    min-width: 40vw;
+    height: 10%
+}
+
+footer img {
+    max-width: 1.25em;
+    margin: 0 .25em;
+    fill: var(--hightlight)
+}
+
+.copyright {
+    display: flex;
+    align-items: center;
+    max-width: fit-content
+}
+
+.copyright a {
+    font-weight: 400;
+    margin-left: .5em
+}
+</style>
 </head>
 <body>
     <!-- Header start -->
