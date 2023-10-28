@@ -48,35 +48,28 @@
         // Định danh các phần tử DOM
 const searchInput = document.getElementById("search-input");
 const paginationContainer = document.querySelector(".pagination-container");
-const themeSwitch = document.getElementById("theme-switch");
-const inputId = document.querySelector('#id');
-const inputact = document.querySelector('#act');
 const body = document.body;
 
-
-// Lưu trữ và lấy dữ liệu sách
-const saveDataBaseStore = (DataBaseList) => {
-    localStorage.setItem('database', JSON.stringify(DataBaseList));
-};
-
 const getDataBaseStore = async () => {
+    const storedDatabase = localStorage.getItem('database');
+    if (storedDatabase) {
+        return JSON.parse(storedDatabase);
+    }else{
     try {
-        let DataBaseLists = JSON.parse(localStorage.getItem('database'));
-        if (!Array.isArray(DataBaseLists) || DataBaseLists.length === 0) {
-             const resBook = await fetch(`/database.json`);
-               let database = await resBook.json();
-            saveDataBaseStore(JSON.parse(database));
-            DataBaseLists = JSON.parse(database);
-        }
-        return DataBaseLists;
+        const resBook = await fetch(`/database.json`);
+        let database = await resBook.json();
+        localStorage.setItem('database', JSON.stringify(database));
+        return database;
     } catch (error) {
-        console.error('Error parsing database list from local storage:', error);
+        console.error("Error parsing database list from local storage:", error);
         return [];
+    }
     }
 };
 
 
 // Quản lý sách và phân trang
+
 let allDataBase = getDataBaseStore();
 const itemsPerPage = 20;
 let totalPages = Math.ceil(allDataBase.length / itemsPerPage);
@@ -217,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Đọc trang hiện tại từ URL nếu có
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get("page");
-    totalPages = Math.ceil(getDataBaseStore().length / itemsPerPage);
+    totalPages = Math.ceil(allDataBase.length / itemsPerPage);
     if (pageParam && pageParam <= totalPages) {
         currentPage = parseInt(pageParam);
         displayDataBase(allDataBase, currentPage);
@@ -232,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const SearchDataBase = (event) => {
     const filter = [];
     const searchValue = event.target.value.toLowerCase();
-    getDataBaseStore().forEach((database) => {
+    allDataBase.forEach((database) => {
         if (database.search.toLowerCase().includes(searchValue)) {
             filter.push(database);
         }
@@ -241,7 +234,7 @@ const SearchDataBase = (event) => {
     if (searchValue) {
         displayDataBase(filter);
     } else {
-        displayDatabe(getDataBaseStore());
+        displayDatabe(allDataBase);
     }
 };
 function sanitizeInput(text) {
@@ -272,28 +265,16 @@ function ussanitizeInput(text) {
 // Sự kiện tìm kiếm sách
 searchInput.addEventListener('keyup', SearchDataBase);
 
-// Hiển thị danh sách sách và cập nhật ngôn ngữ
-displayDataBase(allDataBase, currentPage);
-
-// Đọc trạng thái giao diện chủ đề
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme) {
-    body.classList.add(savedTheme);
-    if (savedTheme === "dark-mode") {
-        themeSwitch.checked = true;
-    }
+async function initializePage() {
+  allDataBase = await getDataBaseStore(); // Sử dụng await để đợi hàm hoàn thành và trả về dữ liệu
+  displayDataBase(allDataBase, currentPage);
 }
 
-// Sự kiện chuyển đổi chủ đề
-themeSwitch.addEventListener("change", () => {
-    if (body.classList.contains("dark-mode")) {
-        body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light-mode");
-    } else {
-        body.classList.add("dark-mode");
-        localStorage.setItem("theme", "dark-mode");
-    }
-});
+// Sự kiện "DOMContentLoaded" để khởi tạo trang web
+document.addEventListener("DOMContentLoaded", initializePage);
+
+
+
     </script>
 </body>
 
