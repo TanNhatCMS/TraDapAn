@@ -7,34 +7,17 @@
     <title>Tra Đáp Án</title>
     <link href="style.css" rel="stylesheet" />
 </head>
-
 <body>
     <!-- Header start -->
     <header class="header">
         <a data-i18n="titleSite" href="#" class="logo">Tra Đáp Án</a>
-        <div class="user-info">
-            <div class="dropdown" id="language-dropdown">
-                <button class="drop btn">
-                    <label data-i18n="language">English</label>
-                </button>
-                <div class="dropdown-content">
-                    <a href="#" id="english-button">English</a>
-                    <a href="#" id="vietnamese-button">Tiếng Việt</a>
-                </div>
-            </div>
-            <div class="theme-toggle">
-                <input type="checkbox" id="theme-switch" class="theme-switch">
-                <label for="theme-switch" class="theme-label">Dark Mode</label>
-            </div>
-            <!-- Inside the header section -->
-        </div>
     </header>
     <!-- Header end -->
     <main class="container">
         <section>
             <!-- Search form start -->
             <div class="search-form">
-                <input id="search-input" name="search-book" class="search-input" type="search"
+                <input id="search-input" name="search-database" class="search-input" type="search"
                     placeholder="Search" />
             </div>
             <!-- Search form end -->
@@ -43,8 +26,8 @@
                 <thead>
                     <tr>
                         <th style="width:5%"><label data-i18n="idLabel">#</label></th>
-                        <th style="width:50%"><label for="name" data-i18n="nameLabel">Câu hỏi</label></th>
-                        <th style="width:45%"><label for="author" data-i18n="authorLabel">Đáp Án</label></th>
+                        <th style="width:50%"><label for="question" >Câu hỏi</label></th>
+                        <th style="width:45%"><label for="answer" >Đáp Án</label></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -61,7 +44,257 @@
             <a href="https://github.com/TanNhatCMS/TraDapAn">Source code</a>
         </div>
     </footer>
-    <script src="script.js"></script>
+    <script>
+        // Định danh các phần tử DOM
+const searchInput = document.getElementById("search-input");
+const paginationContainer = document.querySelector(".pagination-container");
+const themeSwitch = document.getElementById("theme-switch");
+const inputId = document.querySelector('#id');
+const inputact = document.querySelector('#act');
+const body = document.body;
+
+
+// Lưu trữ và lấy dữ liệu sách
+const saveDataBaseStore = (DataBaseList) => {
+    localStorage.setItem('database', JSON.stringify(DataBaseList));
+};
+
+const getDataBaseStore = async () => {
+    try {
+        let DataBaseLists = JSON.parse(localStorage.getItem('database'));
+        if (!Array.isArray(DataBaseLists) || DataBaseLists.length === 0) {
+             const resBook = await fetch(`/database.json`);
+                database = await resBook.json();
+            saveDataBaseStore(await resBook.json());
+            DataBaseLists = resBook.json();
+        }
+        return DataBaseLists;
+    } catch (error) {
+        console.error('Error parsing database list from local storage:', error);
+        return [];
+    }
+};
+
+
+// Quản lý sách và phân trang
+let allDataBase = getDataBaseStore();
+const itemsPerPage = 20;
+let totalPages = Math.ceil(allDataBase.length / itemsPerPage);
+let currentPage = 1;
+
+function displayPageNumbers() {
+    const pageNumbersContainer = document.querySelector("#pagination-numbers");
+    pageNumbersContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageNumberButton = document.createElement('button');
+        pageNumberButton.textContent = i;
+        pageNumberButton.classList.add("pagination-number");
+        if (totalPages === 1) break;
+        if (i === currentPage) {
+            pageNumberButton.classList.add("active");
+        }
+
+        pageNumberButton.addEventListener("click", function () {
+            currentPage = i;
+            displayDataBase(allDataBase, currentPage);
+            updateURLWithoutReloading();
+        });
+
+        pageNumbersContainer.appendChild(pageNumberButton);
+    }
+}
+
+
+function createPaginationButton(text, id) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.id = id;
+    button.className = "pagination-button";
+    return button;
+}
+document.addEventListener("click", function (event) {
+    if (event.target.id === "first-page" && currentPage > 1) {
+        currentPage = 1;
+        displayDataBase(allDataBase, currentPage);
+        updateURLWithoutReloading();
+    } else if (event.target.id === "last-page" && currentPage < totalPages) {
+        currentPage = totalPages;
+        displayDataBase(allDataBase, currentPage);
+        updateURLWithoutReloading();
+    } else if (event.target.id === "prev-page" && currentPage > 1) {
+        currentPage--;
+        displayDataBase(allDataBase, currentPage);
+        updateURLWithoutReloading();
+    } else if (event.target.id === "next-page" && currentPage < totalPages) {
+        currentPage++;
+        displayDataBase(allDataBase, currentPage);
+        updateURLWithoutReloading();
+    }
+});
+function displayDataBase(DataBaseList, page = 1) {
+    totalPages = Math.ceil(DataBaseList.length / itemsPerPage);
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const DataBaseToDisplay = DataBaseList.slice(startIndex, endIndex);
+    const tbody = document.querySelector("#table-book tbody");
+    tbody.innerHTML = '';
+    DataBaseToDisplay.forEach((DataBase, index) => {
+        const newRow = createTableRow(startIndex + index + 1, DataBase.question, DataBase.answer);
+        tbody.appendChild(newRow);
+    });
+    if (totalPages > 1) {
+        const prevPageButton = document.getElementById("prev-page");
+        if (prevPageButton && prevPageButton.parentNode) {
+            prevPageButton.parentNode.removeChild(prevPageButton);
+        }
+        const nextPageButton = document.getElementById("next-page");
+        if (nextPageButton && nextPageButton.parentNode) {
+            nextPageButton.parentNode.removeChild(nextPageButton);
+        }
+        const firstPageButton = document.getElementById("first-page");
+        if (firstPageButton && firstPageButton.parentNode) {
+            firstPageButton.parentNode.removeChild(firstPageButton);
+        }
+        const lastPageButton = document.getElementById("last-page");
+        if (lastPageButton && lastPageButton.parentNode) {
+            lastPageButton.parentNode.removeChild(lastPageButton);
+        }
+        if (currentPage > 1) {
+            const tableContainer = document.querySelector(".pagination-container");
+            const newPrevPageButton = createPaginationButton("<", "prev-page");
+            tableContainer.insertBefore(newPrevPageButton, tableContainer.firstChild);
+        }
+
+        if (currentPage < totalPages) {
+            const tableContainer = document.querySelector(".pagination-container");
+            const newNextPageButton = createPaginationButton(">", "next-page");
+            tableContainer.appendChild(newNextPageButton);
+        }
+
+        // Add "First Page" and "Last Page" buttons if necessary
+
+        const tableContainer = document.querySelector(".pagination-container");
+
+        // Add "First Page" button
+        if (currentPage > 1) {
+            const firstPageButton = createPaginationButton("<<", "first-page");
+            tableContainer.insertBefore(firstPageButton, tableContainer.firstChild);
+        }
+
+        // Add "Last Page" button
+        if (currentPage < totalPages) {
+            const lastPageButton = createPaginationButton(">>", "last-page");
+            tableContainer.appendChild(lastPageButton);
+        }
+        displayPageNumbers();
+    }
+}
+
+function createTableRow(id, question, answer) {
+    const newRow = document.createElement('tr');
+    newRow.classList.add('database-item');
+    newRow.innerHTML = `
+        <td>${id}</td>
+        <td>${question}</td>
+        <td>${answer}</td>
+    `;
+    return newRow;
+}
+function updateURLWithoutReloading() {
+    const newURL = window.location.pathname + "?page=" + currentPage;
+    // Thay đổi URL mà không tải lại trang
+    history.pushState(null, null, newURL);
+}
+window.addEventListener("beforeunload", function (e) {
+    if (currentPage !== undefined) {
+        const newURL = window.location.pathname + "?page=" + currentPage;
+        history.replaceState(null, null, newURL);
+    }
+});
+// Chạy sau khi trang web đã tải hoàn toàn
+document.addEventListener("DOMContentLoaded", function () {
+    // Đọc trang hiện tại từ URL nếu có
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get("page");
+    totalPages = Math.ceil(getDataBaseStore().length / itemsPerPage);
+    if (pageParam && pageParam <= totalPages) {
+        currentPage = parseInt(pageParam);
+        displayDataBase(allDataBase, currentPage);
+    } else {
+        currentPage = 1;
+        updateURLWithoutReloading();
+    }
+
+});
+
+// Tìm kiếm sách
+const SearchDataBase = (event) => {
+    const filter = [];
+    const searchValue = event.target.value.toLowerCase();
+    getDataBaseStore().forEach((database) => {
+        if (database.search.toLowerCase().includes(searchValue)) {
+            filter.push(database);
+        }
+    });
+    currentPage = 1;
+    if (searchValue) {
+        displayDataBase(filter);
+    } else {
+        displayDatabe(getDataBaseStore());
+    }
+};
+function sanitizeInput(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) {
+        return map[m];
+    });
+}
+function ussanitizeInput(text) {
+    var map = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&quot;': '"',
+        '&#039;': "'"
+    };
+    return text.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, function (m) {
+        return map[m];
+    });
+}
+
+// Sự kiện tìm kiếm sách
+searchInput.addEventListener('keyup', SearchDataBase);
+
+// Hiển thị danh sách sách và cập nhật ngôn ngữ
+displayDataBase(allDataBase, currentPage);
+
+// Đọc trạng thái giao diện chủ đề
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+    body.classList.add(savedTheme);
+    if (savedTheme === "dark-mode") {
+        themeSwitch.checked = true;
+    }
+}
+
+// Sự kiện chuyển đổi chủ đề
+themeSwitch.addEventListener("change", () => {
+    if (body.classList.contains("dark-mode")) {
+        body.classList.remove("dark-mode");
+        localStorage.setItem("theme", "light-mode");
+    } else {
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark-mode");
+    }
+});
+    </script>
 </body>
 
 </html>
