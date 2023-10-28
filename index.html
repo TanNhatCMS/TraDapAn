@@ -201,7 +201,7 @@ footer img {
     <!-- Header start -->
     <header class="header">
         <input id="search-input" name="search-database" class="search-input" type="search"
-                    placeholder="Search" />
+                    placeholder="Tìm kiếm tiếng việt có dấu hoặc không dấu" />
     </header>
     <!-- Header end -->
     <main class="container">
@@ -287,7 +287,7 @@ const SearchDataBase = (event) => {
     if (searchValue) {
         displayDataBase(filter);
     } else {
-        displayDataBase(getDataBaseStore());
+        displayDataBase(allDataBase);
     }
 };
 
