@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Tra Đáp Án Thi Nghị Quyết</title>
+    <title>Tra Đáp Án App Thanh Niên Việt Nam</title>
     <style>
         :root {
     --primary-color: #2a3946;
@@ -43,15 +43,7 @@ a,
 button {
     cursor: pointer;
 }
-
-.logo {
-    color: var(--primary-color);
-    font-weight: 800;
-    text-decoration: none;
-    font-size: 32px;
-}
-
-.search-form {
+        .search-form {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -95,7 +87,6 @@ th, td {
     width: 100%; /* Đảm bảo bảng có đủ chiều rộng */
     border-collapse: collapse;
     background-color: #fff;
-    border-collapse: collapse;
     border-spacing: 0;
     margin: 0 auto;
 }
@@ -126,10 +117,6 @@ header h1 {
     font-size: 2rem;
     font-weight: 600;
     margin-left: .25em
-}
-
-header span {
-    color: var(--hightlight)
 }
 
 
@@ -179,39 +166,43 @@ footer {
             <!-- Table end -->
         </section>
     </main>
-    <div class="pagination-container">
-     
-    </div>
+
     <footer>
         <div >
-            &copy; 2023 || Made with TânNhậtCMS||
+            <select id="data-source-select">
+                <option value="database">Đáp Án Nghị Quyết</option>
+                <option value="database2">Đáp Án Lí Luận Chính Trị</option>
+            </select>
+            Tra Đáp Án APP Thanh Niên Việt Nam (V2.0) &copy; 2023 || Made with TânNhậtCMS||
             <a href="https://github.com/TanNhatCMS/TraDapAn">Source code</a>
-            ||Mọi góp ý đáp án chính xác hơn vui lòng liên hệ Zalo: 0385678195</div>
-       
+            </div>
     </footer>
     <script>
         // Định danh các phần tử DOM
 const searchInput = document.getElementById("search-input");
-const paginationContainer = document.querySelector(".pagination-container");
+const dataSourceSelect = document.getElementById("data-source-select");
 const body = document.body;
+let currentDataSource = dataSourceSelect.value;
+let allDataBase;
 
-const getDataBaseStore = async () => {
-    const storedDatabase = localStorage.getItem('database');
+async function getDataBaseStore(dataSource) {
+    const storedDatabase = localStorage.getItem(dataSource);
     if (storedDatabase) {
         return JSON.parse(storedDatabase);
-    }else{
-    try {
-        const resBook = await fetch(`/database.json`);
-        let database = await resBook.json();
-        localStorage.setItem('database', JSON.stringify(database));
-        return database;
-    } catch (error) {
-        console.error("Error parsing database list from local storage:", error);
-        return [];
+    } else {
+        try {
+            const resBook = await fetch(`/${dataSource}.json`);
+            let database = await resBook.json();
+            localStorage.setItem(dataSource, JSON.stringify(database));
+            return database;
+        } catch (error) {
+            console.error(`Error parsing ${dataSource} list from local storage:`, error);
+            return [];
+        }
     }
-    }
-};
-let allDataBase = getDataBaseStore();
+}
+
+
 function displayDataBase(DataBaseList) {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
@@ -231,7 +222,7 @@ function createTableRow(question, answer) {
     return newRow;
 }
 
-// Tìm kiếm sách
+// Tìm kiếm 
 const SearchDataBase = (event) => {
     const filter = [];
     const searchValue = event.target.value.toLowerCase();
@@ -247,18 +238,22 @@ const SearchDataBase = (event) => {
     }
 };
 
-
-// Sự kiện tìm kiếm sách
+// Sự kiện tìm kiếm 
 searchInput.addEventListener('keyup', SearchDataBase);
 
+// Function to update data source when selection changes
+dataSourceSelect.addEventListener("change", async (event) => {
+    currentDataSource = event.target.value;
+    allDataBase = await getDataBaseStore(currentDataSource);
+    displayDataBase(allDataBase);
+});
+
 async function initializePage() {
-  allDataBase = await getDataBaseStore(); // Sử dụng await để đợi hàm hoàn thành và trả về dữ liệu
-  displayDataBase(allDataBase);
+    allDataBase = await getDataBaseStore(currentDataSource);
+    displayDataBase(allDataBase);
 }
 
-// Sự kiện "DOMContentLoaded" để khởi tạo trang web
 document.addEventListener("DOMContentLoaded", initializePage);
-
 
 
     </script>
