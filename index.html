@@ -2,161 +2,137 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
     <title>Tra Đáp Án</title>
-    <style>
-        :root {
-    --primary-color: #2a3946;
-    --secondary-color: #d2455b;
-    --border-color: #c0ccd7;
-    --font-family: 'Poppins', sans-serif;
-}
 
-html {
-    height: 100%;
-    width: 100%;
-    font-size: 16px;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-::placeholder {
-    font-size: 16px;
-    font-weight: 600;
-
-}
-
-body {
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    padding: 0;
-    position: relative;
-    margin: 0 auto
-}
-
-a,
-button {
-    cursor: pointer;
-}
-        .search-form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-    margin: 40px 32px 32px 0;
-}
-
-.search-input {
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 2px solid var(--border-color);
-    min-width: 280px;
-    height: 42px;
-    outline: none;
-}
-
-.search-input::placeholder {
-    color: #c0ccd7;
-}
-
-.search-input:focus {
-    border-color: #d2455b;
-    transition: all 0.25s linear;
-}
-
-
-.search-button:hover {
-    background-color: #d2455ada;
-}
-.table-container {
-    height: 300px; /* Đặt chiều rộng của bảng */
-    overflow: auto; /* Tạo thanh trượt khi nội dung vượt quá kích thước */
-}table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-thead {
-   background-size: 100% 25px; /* Điều chỉnh kích thước góc bo */
-  background-repeat: no-repeat;
-}
-
-thead th {
-  padding: 8px;
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-.table {
-    border-radius: 15px 15px 0 0;
-    background-color: #d2455b;
-    width: 100%; /* Đảm bảo bảng có đủ chiều rộng */
-    border-collapse: collapse;
-    background-color: #fff;
-    border-spacing: 0;
-    margin: 0 auto;
-}
-.table td,
-.table th {
-    text-align: left;
-    padding: 8px 12px;
-    color: var(--primary-color);
-    font-size: 14px;
-}
-.table td {
-    font-weight: 400;
-}
-
-</style>
     <!-- Các liên kết đến các tệp CSS và biểu tượng -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css"
           integrity="sha512-Ez0cGzNzHR1tYAv56860NLspgUGuQw16GiOOp/I2LuTmpSK9xDXlgJz3XN4cnpXWDmkNBKXR/VDMTCnAaEooxA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <!-- Các liên kết đến các tệp CSS tùy chỉnh -->
     <link rel="stylesheet" href="/css/style.css"/>
+    <style>
+        :root {
+            --primary-color: #fcfcfc;
+            --border-color: #c0ccd7;
+            --secondary-color: #070707;
+        }
+        body {
+            background-color: var(--secondary-color);
+        }
+        .search-input {
+            color: var(--border-color);
+            background-color: var(--secondary-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            min-width: 280px;
+            height: 42px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #9f9b9b;
+        }
+
+        .search-input:focus {
+            border-color: #ea0101;
+            transition: all 0.25s linear;
+        }
+
+        .table-container {
+            height: 300px; /* Đặt chiều rộng của bảng */
+            overflow: auto; /* Tạo thanh trượt khi nội dung vượt quá kích thước */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        thead {
+            background-size: 100% 25px; /* Điều chỉnh kích thước góc bo */
+            background-repeat: no-repeat;
+        }
+
+        thead th {
+            padding: 8px;
+        }
+
+        th {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: center;
+        }
+        td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        .table {
+            border-radius: 15px 15px 0 0;
+            width: 100%; /* Đảm bảo bảng có đủ chiều rộng */
+            border-collapse: collapse;
+
+            border-spacing: 0;
+            margin: 0 auto;
+        }
+
+        .table th{
+            text-align: center;
+            padding: 8px 12px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .table td {
+            text-align: left;
+            padding: 8px 12px;
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 400;
+        }
+main{
+    background-color: var(--secondary-color);
+}
+    </style>
 </head>
 <body>
-    <!-- Header end -->
-    <div class="container mt-5 mx-5 mb-5" id="content-wrap">
-        <main role="main" class="p-5">
+<!-- Header end -->
+<div class="container mt-5 mx-5 mb-5" id="content-wrap">
+    <main role="main" class="p-5">
         <section>
             <div class="d-flex justify-content-center">
                 <input id="search-input" name="search-database" class="search-input" type="search"
-                       placeholder="Có dấu hoặc không dấu" />
+                       placeholder="Có dấu hoặc không dấu"/>
             </div>
             <!-- Table start -->
             <div class="table-container">
-            <table id="table-book" class="table-book table-bordered table">
-                <thead>
+                <table id="table-book" class="table-book table-bordered table">
+                    <thead>
                     <tr>
                         <th style="width:50%"><label>Câu hỏi</label></th>
-                        <th style="width:50%"><label >Đáp Án</label></th>
+                        <th style="width:50%"><label>Đáp Án</label></th>
                     </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
             <!-- Table end -->
         </section>
 
     </main>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"
-            integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js"
-            integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script type="module" src="./js/main.js"></script>
-    <script type="module" src="./js/api.js"></script>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"
+        integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/js/bootstrap.min.js"
+        integrity="sha512-EKWWs1ZcA2ZY9lbLISPz8aGR2+L7JVYqBAYTq5AXgBkSjRSuQEGqWx8R1zAX16KdXPaCjOCaKE8MCpU0wcHlHA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/api.js"></script>
 </body>
 
 </html>
