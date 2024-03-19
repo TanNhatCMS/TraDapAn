@@ -11,17 +11,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"/>
     <script src="https://kit.fontawesome.com/3f591abf1e.js" crossorigin="anonymous"></script>
     <!-- Các liên kết đến các tệp CSS tùy chỉnh -->
-    <link rel="stylesheet" href="/admin/css/modal.css"/>
-    <link rel="stylesheet" href="/admin/css/style.css"/>
+    <link rel="stylesheet" href="/css/modal.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 
 <body>
 
 <!-- Phần nội dung chính của trang -->
-<div class="container py-5" id="content-wrap">
-    <main role="main" class="mt-5">
+<div class="container" id="content-wrap">
+    <main role="main" class="mt-4">
         <!-- Phần quản lý -->
-        <div class='d-flex justify-content-between mb-2 py-3 px-2 phoneBanner'>
+        <div class='d-flex justify-content-between mb-2 px-2 phoneBanner'>
             <h3 class="text-light">Quản lý đáp án</h3>
             <div class="text-right">
                 <!-- Nút thêm mới -->
@@ -129,7 +129,11 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Tệp JavaScript chính -->
-    <script type="module" src="/admin/js/main.js"></script>
+    <script type="module" src="/js/admin.js"></script>
+    <script type="module" src="/js/utils.js"></script>
+    <script type="module" src="/js/api-admin.js"></script>
+    <script type="module" src="/js/validator.js"></script>
+    <script type="module" src="/js/data.js"></script>
 </div>
 </body>
 

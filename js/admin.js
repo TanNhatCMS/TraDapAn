@@ -6,7 +6,7 @@ const resetForm = (formId) => getEle(formId).reset();
 
 // Import các module và class từ các file khác
 import {CustomModal, Helper} from './utils.js';
-import {Services} from './api.js';
+import {Services} from './api-admin.js';
 import {Validator} from './validator.js';
 import {Data} from './data.js';
 
