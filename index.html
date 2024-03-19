@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Tra Đáp Án App Thanh Niên Việt Nam</title>
+    <title>Tra Đáp Án</title>
     <style>
         :root {
     --primary-color: #2a3946;
@@ -70,7 +70,6 @@ button {
 }
 
 
-
 .search-button:hover {
     background-color: #d2455ada;
 }
@@ -104,8 +103,6 @@ th, td {
     border-spacing: 0;
     margin: 0 auto;
 }
-
-
 .table td,
 .table th {
     text-align: left;
@@ -113,11 +110,9 @@ th, td {
     color: var(--primary-color);
     font-size: 14px;
 }
-
 .table td {
     font-weight: 400;
 }
-
 .header {
     background-color: #fff;
     display: flex;
@@ -126,33 +121,10 @@ th, td {
     padding: 6px 24px;
     border-bottom: 2px solid #c0ccd7;
 }
-
 header h1 {
     font-size: 2rem;
     font-weight: 600;
     margin-left: .25em
-}
-
-
-
-footer {
-    display: flex;
-    justify-content: center;
-    padding: 2em 1em 1em;
-    min-width: 40vw;
-    height: 10%
-}
-
-
-.copyright {
-    display: flex;
-    align-items: center;
-    max-width: fit-content
-}
-
-.copyright a {
-    font-weight: 400;
-    margin-left: .5em
 }
 </style>
 </head>
@@ -170,8 +142,8 @@ footer {
             <table id="table-book" class="table-book table-bordered table">
                 <thead>
                     <tr>
-                        <th style="width:50%"><label for="question" >Câu hỏi</label></th>
-                        <th style="width:50%"><label for="answer" >Đáp Án</label></th>
+                        <th style="width:50%"><label>Câu hỏi</label></th>
+                        <th style="width:50%"><label >Đáp Án</label></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -180,97 +152,8 @@ footer {
             <!-- Table end -->
         </section>
     </main>
-
-    <footer>
-        <div >
-            <select id="data-source-select">
-                <option value="database">Đáp Án Nghị Quyết</option>
-                <option value="database2">Đáp Án Lí Luận Chính Trị</option>
-            </select>
-            Tra Đáp Án APP Thanh Niên Việt Nam (V2.0) &copy; 2023 || Made with TânNhậtCMS||
-            <a href="https://github.com/TanNhatCMS/TraDapAn">Source code</a>
-            </div>
-    </footer>
-    <script>
-        // Định danh các phần tử DOM
-const searchInput = document.getElementById("search-input");
-const dataSourceSelect = document.getElementById("data-source-select");
-const body = document.body;
-let currentDataSource = dataSourceSelect.value;
-let allDataBase;
-
-async function getDataBaseStore(dataSource) {
-    const storedDatabase = localStorage.getItem(dataSource);
-    if (storedDatabase) {
-        return JSON.parse(storedDatabase);
-    } else {
-        try {
-            const resBook = await fetch(`/${dataSource}.json`);
-            let database = await resBook.json();
-            localStorage.setItem(dataSource, JSON.stringify(database));
-            return database;
-        } catch (error) {
-            console.error(`Error parsing ${dataSource} list from local storage:`, error);
-            return [];
-        }
-    }
-}
-
-
-function displayDataBase(DataBaseList) {
-    const tbody = document.querySelector("#table-book tbody");
-    tbody.innerHTML = '';
-    DataBaseList.forEach((DataBase, index) => {
-        const newRow = createTableRow(DataBase.question, DataBase.answer);
-        tbody.appendChild(newRow);
-    });
-}
-
-function createTableRow(question, answer) {
-    const newRow = document.createElement('tr');
-    newRow.classList.add('database-item');
-    newRow.innerHTML = `
-        <td>${question}</td>
-        <td>${answer}</td>
-    `;
-    return newRow;
-}
-
-// Tìm kiếm 
-const SearchDataBase = (event) => {
-    const filter = [];
-    const searchValue = event.target.value.toLowerCase();
-    allDataBase.forEach((database) => {
-        if (database.search.toLowerCase().includes(searchValue)) {
-            filter.push(database);
-        }
-    });
-    if (searchValue) {
-        displayDataBase(filter);
-    } else {
-        displayDataBase(allDataBase);
-    }
-};
-
-// Sự kiện tìm kiếm 
-searchInput.addEventListener('keyup', SearchDataBase);
-
-// Function to update data source when selection changes
-dataSourceSelect.addEventListener("change", async (event) => {
-    currentDataSource = event.target.value;
-    allDataBase = await getDataBaseStore(currentDataSource);
-    displayDataBase(allDataBase);
-});
-
-async function initializePage() {
-    allDataBase = await getDataBaseStore(currentDataSource);
-    displayDataBase(allDataBase);
-}
-
-document.addEventListener("DOMContentLoaded", initializePage);
-
-
-    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>
