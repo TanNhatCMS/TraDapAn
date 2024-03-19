@@ -1,8 +1,9 @@
 export class Data {
-    constructor(id, question, answer, search) {
+    constructor(id, question, answer,topic, search) {
         this.id = id;
         this.question = question;
         this.answer = answer;
+        this.topic = topic;
         this.search = search;
     }
 }

@@ -1,4 +1,4 @@
-import {Services} from './api.js';
+import {Services} from './api-firebase.js';
 // Định danh các phần tử DOM
 const searchInput = document.getElementById("search-input");
 let allDataBase;
@@ -37,7 +37,7 @@ const SearchDataBase = (event) => {
     }
 };
 async function initializePage() {
-    allDataBase = await service.getDatas();
+    allDataBase = await service.getDataList();
     renderList(allDataBase);
 }
 // Sự kiện tìm kiếm

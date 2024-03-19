@@ -5,6 +5,7 @@ export class Helper {
         this.inpArr = [
             'question',
             'answer',
+            'topic',
             'search'
         ];
         this.tbArr = [
@@ -20,7 +21,7 @@ export class Helper {
 
     fillInputs(arr) {
         this.inpArr.forEach((id, index) => {
-            getEle(id).value = arr[index];
+            getEle(id).value = arr[id];
         });
     }
 
