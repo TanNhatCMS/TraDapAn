@@ -1,6 +1,6 @@
 export class Topic {
-    constructor(id, topic) {
+    constructor(id, name) {
         this.id = id;
-        this.topic = topic;
+        this.name = name;
     }
 }

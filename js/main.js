@@ -1,4 +1,4 @@
-import {Services} from './api-firebase.js';
+import {Services} from './api.js';
 // Định danh các phần tử DOM
 const searchInput = document.getElementById("search-input");
 let allDataBase;
@@ -7,7 +7,8 @@ function renderList(DataBaseList) {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
     DataBaseList.forEach((DataBase, index) => {
-        const newRow = createTableRow(DataBase.question, DataBase.answer);
+        const data = DataBase.data();
+        const newRow = createTableRow(data.question, data.answer);
         tbody.appendChild(newRow);
     });
 }
@@ -27,7 +28,7 @@ const SearchDataBase = (event) => {
     const searchValue = event.target.value.toLowerCase();
     if (searchValue) {
         allDataBase.forEach((database) => {
-            if (database.search.toLowerCase().includes(searchValue)) {
+            if (database.data().search.toLowerCase().includes(searchValue)) {
                 filter.push(database);
             }
         });
@@ -37,7 +38,7 @@ const SearchDataBase = (event) => {
     }
 };
 async function initializePage() {
-    allDataBase = await service.getDataList();
+    allDataBase = await service.getDapanList();
     renderList(allDataBase);
 }
 // Sự kiện tìm kiếm

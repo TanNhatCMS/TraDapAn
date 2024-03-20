@@ -1,27 +1,16 @@
+import {db} from "./firebase-config.js";
+import {
+    collection,
+    getDocs,
+} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
 export class Services {
-    async fetchData(endpoint, method, data = null) {
+    async getDapanList() {
         try {
-            const res = await axios({
-                url: `https://658bef26859b3491d3f51938.mockapi.io/${endpoint}`,
-                method,
-                data,
-            });
-            return res.data;
+            return await getDocs(collection(db, "dapan"));
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching dapan:", error);
+            throw error;
         }
     }
-
-    async getDatas() {
-        return this.fetchData('tradapan', 'GET');
-    }
-
-    async addData(data) {
-        await this.fetchData('tradapan', 'POST', data);
-    }
-
-    async getDataById(id) {
-        return this.fetchData(`tradapan/${id}`, 'GET');
-    }
-
 }

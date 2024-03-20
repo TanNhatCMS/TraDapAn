@@ -3,15 +3,10 @@ const getEle = (id) => document.getElementById(id);
 export class Helper {
     constructor() {
         this.inpArr = [
-            'question',
-            'answer',
-            'topic',
-            'search'
+            'name',
         ];
         this.tbArr = [
-            'tbquestion',
-            'tbanswer',
-            'tbsearch',
+            'tbname',
         ];
     }
 

@@ -1,4 +1,4 @@
-export class Data {
+export class Dapan {
     constructor(id, question, answer,topic, search) {
         this.id = id;
         this.question = question;

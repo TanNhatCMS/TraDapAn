@@ -5,37 +5,35 @@ const getEle = (id) => document.getElementById(id);
 const resetForm = (formId) => getEle(formId).reset();
 
 // Import các module và class từ các file khác
-import {CustomModal, Helper} from './utils.js';
-import {Services} from './api-firebase-admin.js';
-import {Validator} from './validator.js';
-import {Data} from './data.js';
+import {CustomModal, Helper} from './utils-topic.js';
+import {Services} from './api-topic.js';
+import {Validator} from './validator-topic.js';
+import {Topic} from './topic.js';
 
 // Khởi tạo các đối tượng cần sử dụng
 const helper = new Helper();
 const service = new Services();
 const validator = new Validator();
 // Hàm render danh sách
-const renderList = async () => {
+const renderTopicList = async () => {
   try {
-    const dataList = await service.getDataList();
+    const dataList = await service.getTopicList();
     if (!dataList) {
       console.error("Data list is empty or undefined");
       return;
     }
     let content = '';
-      var item =0;
-      dataList.forEach((ele) => {
+    let item = 0;
+    dataList.forEach((doc) => {
+        const ele = doc.data();
         item++;
         content += ` <tr>
         <td>${item}</td>
-        <td>${ele.topic}</td>
-        <td><strong>${ele.question}</strong></td>
-        <td>${ele.answer}</td>
-        <td>${ele.search}</td>
-        <td class = ''style="text-align: center"><button class="btn my-3 me-1" data-bs-toggle="modal"
-        data-bs-target="#exampleModal" onclick ="btnEdit('${ele.id}')"  id='btnEdit'>
+        <td><strong>${ele.name}</strong></td>
+        <td class = "" style="text-align: center"><button class="btn my-3 me-1" data-bs-toggle="modal"
+        data-bs-target="#exampleModal" onclick ="btnEdit('${ele.id}')"  id="btnEdit">
         Sửa<i class="fa fa-pencil-square ms-2"></i>
-        </button><button class="btn " onclick ="btnDelete('${ele.id}')" id='btnDelete'>
+        </button><button class="btn " onclick ="btnDelete('${ele.id}')" id="btnDelete">
         Xoá <i class="fa fa-trash ms-2"></i>
         </button></td>
         </tr>`;
@@ -50,7 +48,7 @@ const renderList = async () => {
 // Sự kiện khi trang web được tải
 window.onload = async () => {
   try {
-    await renderList();
+    await renderTopicList();
   } catch (error) {
     console.error(error);
   }
@@ -65,14 +63,13 @@ getEle('addDataForm').onclick = () => {
 
 getEle('btnAddData').onclick = async () => {
   try {
-    const dataList = await service.getDataList();
+    const dataList = await service.getTopicList();
     if (!validator.isValid(dataList)) return;
-    const id = await service.getNewId();
     const inputs = helper.getInputValues();
-    const data = new Data( id, ...inputs);
-    await service.updateData(data);
-    await renderList();
-    CustomModal.alertSuccess('Thêm câu hỏi thành công');
+    const data = new Topic( "", ...inputs);
+    await service.addTopic(data);
+    await renderTopicList();
+    CustomModal.alertSuccess('Thêm chủ đề thành công');
     $('#exampleModal').modal('hide');
   } catch (error) {
     console.error(error);
@@ -84,8 +81,8 @@ window.btnDelete = async (id) => {
   try {
     const res = await CustomModal.alertDelete(`Câu hỏi này sẽ bị xóa, bạn không thể hoàn tác hành động này`);
     if (res.isConfirmed) {
-      await service.deleteData(id);
-      await renderList();
+      await service.deleteTopic(id);
+      await renderTopicList();
       CustomModal.alertSuccess('Xóa câu hỏi thành công');
     }
   } catch (error) {
@@ -100,18 +97,17 @@ window.btnEdit = async (id) => {
     getEle('btnUpdate').style.display = 'inline-block';
     getEle('btnAddData').style.display = 'none';
 
-    const data = await service.getDataById(id);
+    const data = await service.getTopicById(id);
     helper.fillInputs(data);
 
     // Sự kiện khi nhấn nút "Update" trong modal
     getEle('btnUpdate').onclick = async () => {
-      const dataList = await service.getDataList();
+      const dataList = await service.getTopicList();
       if (!validator.isValid(dataList, true)) return;
-
       const inputs = helper.getInputValues();
-      const data = new Data(id, ...inputs);
-      await service.updateData(data);
-      await renderList();
+      const data = new Topic(id, ...inputs);
+      await service.updateTopic(data);
+      await renderTopicList();
       CustomModal.alertSuccess('Cập nhật câu hỏi thành công');
       $('#exampleModal').modal('hide');
     };
@@ -119,11 +115,15 @@ window.btnEdit = async (id) => {
     console.error(error);
   }
 };
-function performSearch() {
-  const questionText = document.getElementById('question').value.toLowerCase();
-  const answerText = document.getElementById('answer').value.toLowerCase();
-  document.getElementById('search').value = questionText + ' ' + answerText + ' ' + validator.removeVietnameseTones(questionText) + ' ' + validator.removeVietnameseTones(answerText);
-}
+
 
 // Event listener for search button
-document.getElementById('btnSearchKey').addEventListener('click', performSearch);
+//document.getElementById('btnSearchKey').addEventListener('click', performSearch);
+//const services = new Services();
+// services.getDapanList().then((data) => {
+//   console.log(data);
+//   data.forEach((doc) => {
+//
+//     console.log(`answer => ${doc.data().answer}`);
+//   });
+// });
