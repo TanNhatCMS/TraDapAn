@@ -72,24 +72,29 @@ export class Validator {
         return true;
     }
 
-    // Kiểm tra sự tồn tại của dữ liệu nhập vào trong danh sách
+// Kiểm tra sự tồn tại của dữ liệu nhập vào trong danh sách
     isNotExist(dataList, isUpdate = false) {
         if (isUpdate) return true;
         const enteredName = getEle('question').value;
-        const isUnique = dataList.some(data => data.name === enteredName);
+        let isUnique = false;
+        dataList.forEach(data => {
+            if (data.data().question === enteredName) {
+                isUnique = true;
+            }
+        });
         if (isUnique) {
             this.showMessage('tbquestion', '(*)Câu hỏi này đã tồn tại', true);
             return false;
         }
         return true;
     }
-
     // Kiểm tra tính hợp lệ của toàn bộ dữ liệu nhập vào
-    isValid(dataList, isUpdate) {
+    isValid(dataList, isUpdate  = false) {
         const validations = [
-            this.isEmpty('answer', 'tbanswer'),
             this.isEmpty('question', 'tbquestion'),
-            this.checkKeyword()
+            this.isEmpty('answer', 'tbanswer'),
+            this.checkKeyword(),
+            this.isNotExist(dataList, isUpdate)
         ];
         return validations.every(validation => validation);
     }
