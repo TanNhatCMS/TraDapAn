@@ -131,8 +131,8 @@ window.btnEdit = async (id) => {
   }
 };
 function performSearch() {
-  const questionText = document.getElementById('question').value.toLowerCase();
   const answerText = document.getElementById('answer').value.toLowerCase();
+  const questionText = validator.removeQuestionMark(document.getElementById('question').value.toLowerCase()).replace(answerText, '');
   document.getElementById('search').value = questionText + ' ' + answerText + ' ' + validator.removeVietnameseTones(questionText) + ' ' + validator.removeVietnameseTones(answerText);
 }
 

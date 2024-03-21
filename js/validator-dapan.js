@@ -12,7 +12,13 @@ export class Validator {
         element.innerHTML = isVisible ? message : '&#8205;';
         element.style.display = isVisible ? 'block' : 'none';
     };
-
+    removeQuestionMark(str) {
+        const colonIndex = str.indexOf(':'); // Tìm vị trí của dấu hai chấm
+        if (colonIndex !== -1) { // Nếu tìm thấy dấu hai chấm
+            return str.substring(colonIndex + 2); // Tách chuỗi từ vị trí sau dấu hai chấm
+        }
+        return str;
+    }
     removeVietnameseTones(str) {
         str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
         str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -64,8 +70,8 @@ export class Validator {
                 this.showMessage("tbsearch", isEmptyanswer ? `(*)Trường đáp án không thể để trống` : '', isEmptyanswer);
                 return false;
             }
-            const questionText = document.getElementById('question').value.trim().toLowerCase();
             const answerText = document.getElementById('answer').value.trim().toLowerCase();
+            const questionText = this.removeQuestionMark(document.getElementById('question').value.trim().toLowerCase()).replace(answerText, '');
             document.getElementById('search').value = questionText + ' ' + answerText + ' ' + this.removeVietnameseTones(questionText) + ' ' + this.removeVietnameseTones(answerText);
             return true;
         }
@@ -78,7 +84,7 @@ export class Validator {
         const enteredName = getEle('question').value;
         let isUnique = false;
         dataList.forEach(data => {
-            if (data.data().question === enteredName) {
+            if (this.removeQuestionMark(data.data().question) === this.removeQuestionMark(enteredName)) {
                 isUnique = true;
             }
         });
