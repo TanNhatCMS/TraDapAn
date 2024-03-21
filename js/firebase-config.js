@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getFirestore  } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache,persistentMultipleTabManager   } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,6 +18,10 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 // Tạo reference tới Firebase Realtime Database
-const db = getFirestore(firebaseApp);
+const db = initializeFirestore(firebaseApp, {
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+    }),
+});
 
 export { firebaseApp, db };

@@ -15,9 +15,11 @@ const helper = new Helper();
 const service = new Services();
 const validator = new Validator();
 // Hàm render danh sách
+let allDataBase = null;
 const renderDapanList = async () => {
   try {
     const dataList = await service.getDapanList();
+    allDataBase = dataList;
     if (!dataList) {
       console.error("Data list is empty or undefined");
       return;
@@ -66,7 +68,15 @@ getEle('addDataForm').onclick = () => {
 
 getEle('btnAddData').onclick = async () => {
   try {
-    const dataList = await service.getDapanList();
+    // đóng băng nút btnAddData
+    getEle('btnAddData').disabled = true;
+    let dataList = allDataBase;
+    if(dataList === null) {
+       dataList = await service.getDapanList();
+       allDataBase = dataList;
+    }else {
+      dataList = allDataBase;
+    }
     if (!validator.isValid(dataList)) return;
 
     const inputs = helper.getInputValues();
@@ -74,6 +84,7 @@ getEle('btnAddData').onclick = async () => {
     await service.addDapan(data);
     await renderDapanList();
     CustomModal.alertSuccess('Thêm câu hỏi thành công');
+    getEle('btnAddData').disabled = false;
     $('#exampleModal').modal('hide');
   } catch (error) {
     console.error(error);

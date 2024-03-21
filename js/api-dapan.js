@@ -1,13 +1,15 @@
 import {db} from "./firebase-config.js";
 import {
     collection,
+    query,
     doc,
+    orderBy,
     getDoc,
     getDocs,
     updateDoc,
     deleteDoc,
-    addDoc
-
+    addDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 import {Dapan} from "./dapan.js";
 
@@ -29,7 +31,9 @@ export class Services {
     };
     async getDapanList() {
         try {
-            return await getDocs(collection(db, "dapan"));
+            const querySnapshot = await getDocs(query(collection(db, "dapan"), orderBy("index")));
+            // Return the filtered data
+            return querySnapshot;
         } catch (error) {
             console.error("Error fetching dapan:", error);
             throw error;
@@ -57,7 +61,9 @@ export class Services {
                 question: data.question,
                 answer: data.answer,
                 topic: data.topic,
-                search: data.search
+                search: data.search,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
             });
             await this.updateDapan(new Dapan(docRef.id, data.question, data.answer, data.topic, data.search));
             console.log("New dapan added with ID: ", docRef.id);
@@ -75,6 +81,7 @@ export class Services {
                 answer: data.answer,
                 topic: data.topic,
                 search: data.search,
+                updatedAt: serverTimestamp() // Add updatedAt field with server timestamp
             };
             await updateDoc(topicRef, newData);
             console.log("dapan updated successfully");
