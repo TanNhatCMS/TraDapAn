@@ -8,7 +8,6 @@ const resetForm = (formId) => getEle(formId).reset();
 import {CustomModal, Helper} from './utils-dapan.js';
 import {Services} from './api-dapan.js';
 import {Validator} from './validator-dapan.js';
-import {Dapan} from './dapan.js';
 
 // Khởi tạo các đối tượng cần sử dụng
 const helper = new Helper();
@@ -36,9 +35,9 @@ const renderDapanList = async () => {
         <td>${ele.answer}</td>
         <td>${ele.search}</td>
         <td class="" style="text-align: center"><button class="btn my-3 me-1" data-bs-toggle="modal"
-        data-bs-target="#exampleModal" onclick ="btnEdit('${ele.id}')"  id="btnEdit">
+        data-bs-target="#exampleModal" onclick ="btnEdit('${doc.id}')"  id="btnEdit">
         Sửa<i class="fa fa-pencil-square ms-2"></i>
-        </button><button class="btn " onclick ="btnDelete('${ele.id}')" id="btnDelete">
+        </button><button class="btn " onclick ="btnDelete('${doc.id}')" id="btnDelete">
         Xoá <i class="fa fa-trash ms-2"></i>
         </button></td>
         </tr>`;
@@ -77,11 +76,12 @@ getEle('btnAddData').onclick = async () => {
     }else {
       dataList = allDataBase;
     }
-    if (!validator.isValid(dataList)) return;
-
+    if (!validator.isValid(dataList)){
+        getEle('btnAddData').disabled = false;
+        return;
+    }
     const inputs = helper.getInputValues();
-    const data = new Dapan( "", ...inputs);
-    await service.addDapan(data);
+    await service.addDapan(inputs);
     await renderDapanList();
     CustomModal.alertSuccess('Thêm câu hỏi thành công');
     getEle('btnAddData').disabled = false;
@@ -121,8 +121,7 @@ window.btnEdit = async (id) => {
       if (!validator.isValid(dataList, true)) return;
 
       const inputs = helper.getInputValues();
-      const data = new Dapan(id, ...inputs);
-      await service.updateDapan(data);
+      await service.updateDapan(id, inputs);
       await renderDapanList();
       CustomModal.alertSuccess('Cập nhật câu hỏi thành công');
       $('#exampleModal').modal('hide');

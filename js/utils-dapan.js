@@ -14,19 +14,19 @@ export class Helper {
             'tbsearch',
         ];
     }
-
     getInputValues() {
-        return this.inpArr.map(id => {
+        const inputObject = {}; // Khởi tạo đối tượng để lưu trữ giá trị
+        this.inpArr.forEach(id => {
             if (id === 'topic') { // Nếu là phần tử select
                 const element = document.getElementById(id);
-                return element ? element.value : ''; // Trả về giá trị đã chọn từ select
+                inputObject[id] = element ? element.value : ''; // Gán giá trị đã chọn từ select cho thuộc tính tương ứng
             } else { // Nếu là phần tử nhập liệu khác
                 const element = document.getElementById(id);
-                return element ? element.value : ''; // Trả về giá trị của phần tử nếu tồn tại, ngược lại trả về chuỗi rỗng
+                inputObject[id] = element ? element.value : ''; // Gán giá trị của phần tử cho thuộc tính tương ứng nếu tồn tại, ngược lại gán chuỗi rỗng
             }
         });
+        return inputObject; // Trả về đối tượng chứa giá trị của các phần tử nhập liệu
     }
-
     fillInputs(arr) {
         this.inpArr.forEach((id, index) => {
             getEle(id).value = arr[id];

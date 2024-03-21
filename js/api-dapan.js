@@ -1,17 +1,16 @@
 import {db} from "./firebase-config.js";
 import {
+    addDoc,
     collection,
-    query,
+    deleteDoc,
     doc,
-    orderBy,
     getDoc,
     getDocs,
-    updateDoc,
-    deleteDoc,
-    addDoc,
-    serverTimestamp
+    orderBy,
+    query,
+    serverTimestamp,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-import {Dapan} from "./dapan.js";
 
 
 export class Services {
@@ -31,9 +30,8 @@ export class Services {
     };
     async getDapanList() {
         try {
-            const querySnapshot = await getDocs(query(collection(db, "dapan"), orderBy("index")));
             // Return the filtered data
-            return querySnapshot;
+            return await getDocs(query(collection(db, "dapan"), orderBy("index")));
         } catch (error) {
             console.error("Error fetching dapan:", error);
             throw error;
@@ -55,9 +53,22 @@ export class Services {
         }
     }
     async addDapan(data){
+        let index = 0;
         try {
+            const num = data.question.match(/câu (\d+):/);
+            if(num){
+                index =  parseInt(num[1]);
+            }
+            if(isNaN(index)){
+                index = 0;
+            }
+        }catch (e) {
+
+        }
+        try {
+
             const docRef = await addDoc(collection(db, "dapan"), {
-                id: "",
+                index: index,
                 question: data.question,
                 answer: data.answer,
                 topic: data.topic,
@@ -65,25 +76,23 @@ export class Services {
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             });
-            await this.updateDapan(new Dapan(docRef.id, data.question, data.answer, data.topic, data.search));
             console.log("New dapan added with ID: ", docRef.id);
         } catch (error) {
             console.error("Error adding dapan: ", error);
         }
     };
 
-    async updateDapan(data) {
+    async updateDapan(id, data) {
         try {
-            const topicRef = doc(db, "dapan", data.id);
-            const newData = {
-                id: data. id,
+            const topicRef = doc(db, "dapan", id);
+            const Data = {
                 question: data.question,
                 answer: data.answer,
                 topic: data.topic,
                 search: data.search,
                 updatedAt: serverTimestamp() // Add updatedAt field with server timestamp
             };
-            await updateDoc(topicRef, newData);
+            await updateDoc(topicRef, Data);
             console.log("dapan updated successfully");
         } catch (error) {
             console.error("Error updating dapan:", error);
