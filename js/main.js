@@ -1,4 +1,8 @@
 import {Services} from './api.js';
+import {Validator} from './validator-dapan.js';
+
+// Khởi tạo các đối tượng cần sử dụng
+const validator = new Validator();
 // Định danh các phần tử DOM
 const searchInput = document.getElementById("search-input");
 let allDataBase;
@@ -16,7 +20,7 @@ function createTableRow(question, answer) {
     const newRow = document.createElement('tr');
     newRow.classList.add('database-item');
     newRow.innerHTML = `
-        <td>${question}</td>
+        <td>${validator.removeQuestionMark(question)}</td>
         <td>${answer}</td>
     `;
     return newRow;
