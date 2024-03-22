@@ -55,7 +55,7 @@ export class Services {
     async addDapan(data){
         let index = 0;
         try {
-            const num = data.question.match(/câu (\d+):/);
+            const num = data.question.match(/câu (\d+):/i);
             if(num){
                 index =  parseInt(num[1]);
             }

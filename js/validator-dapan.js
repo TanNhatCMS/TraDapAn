@@ -13,7 +13,7 @@ export class Validator {
         element.style.display = isVisible ? 'block' : 'none';
     };
     removeQuestionMark(str) {
-        const colonIndex = str.indexOf(':'); // Tìm vị trí của dấu hai chấm
+        const colonIndex = str.indexOf(':', 0); // Tìm vị trí của dấu hai chấm
         if (colonIndex !== -1) { // Nếu tìm thấy dấu hai chấm
             return str.substring(colonIndex + 2); // Tách chuỗi từ vị trí sau dấu hai chấm
         }

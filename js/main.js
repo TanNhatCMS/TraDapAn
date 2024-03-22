@@ -10,17 +10,19 @@ const service = new Services();
 function renderList(DataBaseList) {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
-    DataBaseList.forEach((DataBase, index) => {
+    let index = 0;
+    DataBaseList.forEach((DataBase) => {
+        index++;
         const data = DataBase.data();
-        const newRow = createTableRow(data.question, data.answer);
+        const newRow = createTableRow(index, data.question, data.answer);
         tbody.appendChild(newRow);
     });
 }
-function createTableRow(question, answer) {
+function createTableRow(index, question, answer) {
     const newRow = document.createElement('tr');
     newRow.classList.add('database-item');
     newRow.innerHTML = `
-        <td>${validator.removeQuestionMark(question)}</td>
+        <td>${index}). ${validator.removeQuestionMark(question)}</td>
         <td>${answer}</td>
     `;
     return newRow;
