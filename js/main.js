@@ -7,15 +7,17 @@ const validator = new Validator();
 const searchInput = document.getElementById("search-input");
 let allDataBase;
 const service = new Services();
-function renderList(DataBaseList) {
+function renderList(DataBaseList, filter = 'all') {
     const tbody = document.querySelector("#table-book tbody");
     tbody.innerHTML = '';
     let index = 0;
     DataBaseList.forEach((DataBase) => {
         index++;
         const data = DataBase.data();
-        const newRow = createTableRow(index, data.question, data.answer);
-        tbody.appendChild(newRow);
+        if (filter === 'all' || data.topic === filter) {
+            const newRow = createTableRow(index, data.question, data.answer);
+            tbody.appendChild(newRow);
+        }
     });
 }
 function createTableRow(index, question, answer) {
@@ -43,7 +45,16 @@ const SearchDataBase = (event) => {
         renderList(allDataBase);
     }
 };
+const getEle = (id) => document.getElementById(id);
+
+getEle('topic').onchange = async () => {
+    const data= await service.getDapanList();
+    const selectValue = getEle('topic').value;
+    renderList(data, selectValue);
+};
+
 async function initializePage() {
+    await service.populateTopicSelect();
     allDataBase = await service.getDapanList();
     renderList(allDataBase);
 }
